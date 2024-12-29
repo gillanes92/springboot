@@ -6,6 +6,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.azure.spring.cloud.autoconfigure.implementation.aad.security.AadWebApplicationHttpSecurityConfigurer;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -13,16 +15,14 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		
-		return http.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/").permitAll()
-						.requestMatchers("/contact").permitAll()
-						.requestMatchers("/login").permitAll()
-						.requestMatchers("/logout").permitAll()
+		return http.apply(AadWebApplicationHttpSecurityConfigurer.aadWebApplication())
+				.and()
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/","/local").permitAll()
 						.anyRequest().authenticated()
 					)
-					.formLogin(form -> form
-							.defaultSuccessUrl("/"))
-					.logout(config -> config.logoutSuccessUrl("/"))
+					//.formLogin(form -> form.loginPage("/login").permitAll(false))
+					//.logout(config -> config.logoutSuccessUrl("/"))
 					.build();
 		
 	}

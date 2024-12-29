@@ -1,51 +1,84 @@
 package com.enel.rdd.storedProcedure;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.object.StoredProcedure;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.enel.rdd.storedProcedure.mapper.UserDetailsMapper;
+import com.enel.rdd.storedProcedure.mapper.UserMapper;
 
-public class LoadUsersByUsernameStoredProcedure extends StoredProcedure {
-	private static final String SPROC_NAME = "ACSPSEC.SP_ACP_LOAD_USER_BY_USERNAME";
-	private static final String nombre_in_param = "nombre_in";
 
-	private static final String ncod_salida_out_param = "ncod_salida_out";
-	private static final String vmsg_salida_out_param = "vmsg_salida_out";
-	private static final String cur_usuario_out = "cur_usuario_out";
+public class LoadUsersByUsernameStoredProcedure {
+	
+	private CallableStatement callableStatement = null;
+	private Connection conn = null;
 
-	public LoadUsersByUsernameStoredProcedure(DataSource dataSource) {
-		super(dataSource, SPROC_NAME);
-		declareParameter(new SqlParameter(nombre_in_param, Types.VARCHAR));
-
-		declareParameter(new SqlOutParameter(ncod_salida_out_param, Types.VARCHAR));
-		declareParameter(new SqlOutParameter(vmsg_salida_out_param, Types.VARCHAR));
-		declareParameter(new SqlOutParameter(cur_usuario_out, Types.OTHER, new UserDetailsMapper()));
-
-		compile();
-	}
-
-	public List<UserDetails> execute(String username) {
-				
-		Map<String, Object> inputs = new HashMap<String, Object>();
-		inputs.put(nombre_in_param, username);
-
-		Map<String,Object> mapa = super.execute(inputs);
+	public LoadUsersByUsernameStoredProcedure(Connection conn) throws SQLException{
 		
-		List<UserDetails> list = null;
-		if(mapa.get(cur_usuario_out)!=null){
-			list = (List<UserDetails>) mapa.get(cur_usuario_out);
+		this.conn = conn;
+		this.conn.setAutoCommit(false);
+		callableStatement = this.conn.prepareCall("{call ACSPSEC.SP_ACP_LOAD_USER_BY_USERNAME(?,?,?) }");
+ 
+	}
+	
+	public UserDetails execute(String username) {
+		
+		UserDetails user = null;
+		
+		try {
+			
+			callableStatement.setString(1, username);
+			
+			callableStatement.registerOutParameter(1, Types.VARCHAR);
+			callableStatement.registerOutParameter(2, Types.VARCHAR);
+			callableStatement.registerOutParameter(3, Types.OTHER);
+
+			callableStatement.execute();
+						
+			ResultSet rs = (ResultSet) callableStatement.getObject(3);
+			
+			UserMapper userMapper = new UserMapper();
+			
+			while(rs.next()) {
+				
+				userMapper.setUsername(rs.getString("username"));
+				userMapper.setPassword(rs.getString("password"));
+				userMapper.setEnabled(rs.getBoolean("enabled"));
+				userMapper.setAccountNonExpired(rs.getBoolean("accountNonExpired"));
+				userMapper.setCredentialsNonExpired(rs.getBoolean("credentialsNonExpired"));
+				userMapper.setAccountNonLocked(rs.getBoolean("accountNonLocked"));
+			}
+			
+			user = new User(userMapper.getUsername(), "{noop}"+" ", userMapper.isEnabled(),
+					userMapper.isAccountNonExpired(), userMapper.isCredentialsNonExpired(), userMapper.isAccountNonLocked(), AuthorityUtils.NO_AUTHORITIES);
+						
+			callableStatement.close();
+			this.conn.close();
+ 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				
+				if(callableStatement != null) 
+					callableStatement.close();
+			
+				if(this.conn != null)
+					this.conn.close();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
 		}
 		
-		return list;
+		return user;
 	}
 
 }

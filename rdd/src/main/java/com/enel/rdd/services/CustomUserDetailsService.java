@@ -1,16 +1,20 @@
 package com.enel.rdd.services;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.enel.rdd.storedProcedure.LoadAuthorityByUsernameStoredProcedure;
 import com.enel.rdd.storedProcedure.LoadUsersByUsernameStoredProcedure;
 
 
@@ -33,11 +37,39 @@ public class CustomUserDetailsService implements UserDetailsService {
 			e1.printStackTrace();
 		}
 		
-		LoadUsersByUsernameStoredProcedure loadUsers = new LoadUsersByUsernameStoredProcedure(dataSourceBTN);
+		LoadUsersByUsernameStoredProcedure loadUsers = null;
+		try {
+			loadUsers = new LoadUsersByUsernameStoredProcedure(dataSourceBTN.getConnection());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		List<UserDetails> users = loadUsers.execute(username);		
+		UserDetails user = loadUsers.execute(username);
 		
-		return users.get(0);
+		LoadAuthorityByUsernameStoredProcedure loadAuthority = null;
+		try {
+			loadAuthority = new LoadAuthorityByUsernameStoredProcedure(dataSourceBTN.getConnection());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		List<GrantedAuthority> grantedAuthoritys = loadAuthority.execute(username);
+		
+		
+		
+		return createUserDetails(username, user, grantedAuthoritys);
+	}
+	
+	public UserDetails createUserDetails(String username, UserDetails userFromUserQuery,
+			List<GrantedAuthority> combinedAuthorities) {
+
+		return new User(username, userFromUserQuery.getPassword(), 
+                       userFromUserQuery.isEnabled(),
+		       userFromUserQuery.isAccountNonExpired(), 
+                       userFromUserQuery.isCredentialsNonExpired(),
+			userFromUserQuery.isAccountNonLocked(), combinedAuthorities);
 	}
 
 }

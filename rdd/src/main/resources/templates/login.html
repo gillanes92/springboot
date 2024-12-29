@@ -30,14 +30,8 @@
 				</ul>
 
 				<ul class="navbar-nav" sec:authorize="!isAuthenticated()">
-					<li class="nav-item"><a href="/rdd/oauth2/authorization/azure"
-						class="btn btn-primary">Login</a></li>
-				</ul>
-
-				<ul class="navbar-nav" sec:authorize="isAuthenticated()">
-					<div sec:authentication="principal.attributes"></div>
 					<li class="nav-item"><a href="/rdd/login"
-						class="btn btn-outline-primary me-2">Logout</a></li>
+						class="btn btn-primary">Login</a></li>
 				</ul>
 
 			</div>
