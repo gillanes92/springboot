@@ -1,4 +1,4 @@
-package com.enel.rdd.storedProcedure;
+package com.enel.rdd.login.storedProcedure;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -10,7 +10,8 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.enel.rdd.storedProcedure.mapper.UserMapper;
+import com.enel.rdd.login.storedProcedure.mapper.UserMapper;
+
 
 
 public class LoadUsersByUsernameStoredProcedure {

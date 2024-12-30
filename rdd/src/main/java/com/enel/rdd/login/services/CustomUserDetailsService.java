@@ -1,4 +1,4 @@
-package com.enel.rdd.services;
+package com.enel.rdd.login.services;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,8 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.enel.rdd.storedProcedure.LoadAuthorityByUsernameStoredProcedure;
-import com.enel.rdd.storedProcedure.LoadUsersByUsernameStoredProcedure;
+import com.enel.rdd.login.storedProcedure.LoadAuthorityByUsernameStoredProcedure;
+import com.enel.rdd.login.storedProcedure.LoadUsersByUsernameStoredProcedure;
+
 
 
 @Service
@@ -47,6 +48,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 		
 		UserDetails user = loadUsers.execute(username);
 		
+		System.out.println(user.getUsername()+" "+ user.isEnabled());
+		
 		LoadAuthorityByUsernameStoredProcedure loadAuthority = null;
 		try {
 			loadAuthority = new LoadAuthorityByUsernameStoredProcedure(dataSourceBTN.getConnection());
@@ -55,9 +58,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 			e.printStackTrace();
 		}
 		
-		List<GrantedAuthority> grantedAuthoritys = loadAuthority.execute(username);
-		
-		
+		List<GrantedAuthority> grantedAuthoritys = loadAuthority.execute(username);		
+		System.out.println(grantedAuthoritys.get(0));
 		
 		return createUserDetails(username, user, grantedAuthoritys);
 	}

@@ -1,4 +1,4 @@
-package com.enel.rdd.storedProcedure.mapper;
+package com.enel.rdd.login.storedProcedure.mapper;
 
 public class UserMapper {
 

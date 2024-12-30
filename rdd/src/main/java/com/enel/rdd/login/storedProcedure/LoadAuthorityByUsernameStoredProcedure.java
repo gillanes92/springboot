@@ -1,4 +1,4 @@
-package com.enel.rdd.storedProcedure;
+package com.enel.rdd.login.storedProcedure;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
