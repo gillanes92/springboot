@@ -48,8 +48,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 		
 		UserDetails user = loadUsers.execute(username);
 		
-		System.out.println(user.getUsername()+" "+ user.isEnabled());
-		
 		LoadAuthorityByUsernameStoredProcedure loadAuthority = null;
 		try {
 			loadAuthority = new LoadAuthorityByUsernameStoredProcedure(dataSourceBTN.getConnection());
@@ -58,8 +56,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 			e.printStackTrace();
 		}
 		
-		List<GrantedAuthority> grantedAuthoritys = loadAuthority.execute(username);		
-		System.out.println(grantedAuthoritys.get(0));
+		List<GrantedAuthority> grantedAuthoritys = loadAuthority.execute(username);
 		
 		return createUserDetails(username, user, grantedAuthoritys);
 	}
@@ -67,7 +64,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	public UserDetails createUserDetails(String username, UserDetails userFromUserQuery,
 			List<GrantedAuthority> combinedAuthorities) {
 
-		return new User(username, userFromUserQuery.getPassword(), 
+		return new User(userFromUserQuery.getUsername(), userFromUserQuery.getPassword(), 
                        userFromUserQuery.isEnabled(),
 		       userFromUserQuery.isAccountNonExpired(), 
                        userFromUserQuery.isCredentialsNonExpired(),

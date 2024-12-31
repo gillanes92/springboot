@@ -12,14 +12,15 @@ import com.azure.spring.cloud.autoconfigure.implementation.aad.security.AadWebAp
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @SuppressWarnings("removal")
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 		return http.apply(AadWebApplicationHttpSecurityConfigurer.aadWebApplication()).and()
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/").permitAll().requestMatchers("/local")
-						.permitAll().requestMatchers("/images/**").permitAll().requestMatchers("/css/**").permitAll()
+						.permitAll().requestMatchers("/images/**").permitAll().requestMatchers("/css/**").permitAll().requestMatchers("/js/**").permitAll()
 						.anyRequest().authenticated())
-				.formLogin(form -> form.defaultSuccessUrl("/home", true)).build();
+				.formLogin(form -> form.defaultSuccessUrl("/", true)).build();
 
 	}
 

@@ -1,5 +1,6 @@
 package com.enel.rdd.login.controllers;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,8 +29,25 @@ public class LoginController {
 	
 	@GetMapping("/loginRDD")
 	public String login(Model model,@AuthenticationPrincipal OidcUser principal) {
-		System.out.println(principal.getPreferredUsername());
-		model.addAttribute("username", principal.getPreferredUsername());		
+		
+		if(principal!=null) {
+			System.out.println("principal: "+principal);
+			
+			model.addAttribute("username", principal.getPreferredUsername());
+			
+		}else {
+			SecurityContext a = SecurityContextHolder.getContext();
+			System.out.println("NAME: "+a.getAuthentication().getName());
+			System.out.println("DETAILS: "+a.getAuthentication().getDetails());
+			System.out.println("PRINCIPAL: "+a.getAuthentication().getPrincipal());
+			System.out.println("AUTHORITIES: "+a.getAuthentication().getAuthorities());		
+			
+			for (GrantedAuthority auth : a.getAuthentication().getAuthorities()) {
+	            if ("ROLE_dashboard".equals(auth.getAuthority()))
+	            	return  "redirect:/dashboard";
+	 	   }
+			
+		}	
 		return "login/loginRDD";
 	}
 	
