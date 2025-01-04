@@ -38,7 +38,13 @@ public class DashboardController {
 		
 		SecurityContext a = SecurityContextHolder.getContext();
 		
-		UsuarioObtenerStoredProcedure usuario = new UsuarioObtenerStoredProcedure(dataSourceBTN);
+		UsuarioObtenerStoredProcedure usuario = null;
+		try {
+			usuario = new UsuarioObtenerStoredProcedure(dataSourceBTN.getConnection());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Usuario user = null;
 		try {
@@ -51,9 +57,9 @@ public class DashboardController {
 		Integer companyId = user.getEmpresa().getId();
 		
 		if (companyId == 1){
-			return "dashboardChile";
+			return "dashboard/dashboardChile";
 		}else {
-			return "dashboardChile";
+			return "dashboard/dashboardChile";
 		}
 		
 	}
