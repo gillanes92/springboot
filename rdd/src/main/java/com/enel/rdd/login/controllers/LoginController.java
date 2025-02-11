@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Controller
@@ -27,8 +28,14 @@ public class LoginController {
 		return "index";
 	}
 	
-	@GetMapping("/loginRDD")
+	@GetMapping("/login")
 	public String login(Model model,@AuthenticationPrincipal OidcUser principal) {
+		
+		return "redirect:/";
+	}
+	
+	@GetMapping("/loginRDD")
+	public String loginRDD(Model model,@AuthenticationPrincipal OidcUser principal) {
 		
 		if(principal!=null) {
 			System.out.println("principal: "+principal);
