@@ -1,0 +1,12 @@
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\model\Mascota.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\service\MascotaService.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\dto\MascoDuenioDTO.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\service\IMascotaService.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\model\Duenio.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\service\IDuenioService.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\controller_api\DuenioController.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\ClinicaVeterinariaApiApplication.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\repository\IMascotaRepository.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\repository\IDuenioRepository.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\controller_api\MascotaController.java
+C:\Users\gilla\Documents\cursos\springboot\clin_vet-master\clinica_veterinaria_api\src\main\java\com\todocodeacademy\clinica_veterinaria_api\service\DuenioService.java
